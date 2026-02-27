@@ -46,12 +46,95 @@
  */
 export function createDialogueWriter(genre) {
   // Your code here
+
+if( !genre || typeof genre !== "string") return null;
+const g = genre.toLowerCase();
+const gnList = ["action", "romance", "comedy", "drama"];
+if (!gnList.includes(g)) return null;
+
+ return (hero, villain) =>{
+
+  if(!hero || !villain) return "...";
+  let dialuge = ""; 
+
+  switch (genre)
+  {
+    case "action":
+      dialuge = `${hero} says: 'Tujhe toh main dekh lunga, ${villain}!'`;
+      break;
+    case "romance":
+      dialuge = `${hero} whispers: '${villain}, tum mere liye sab kuch ho'`;
+      break;
+
+    case "comedy":
+      dialuge = `${hero} laughs: '${villain} bhai, kya kar rahe ho yaar!'`;
+      break;
+    case "drama":
+      dialuge = `${hero} cries: '${villain}, tune mera sab kuch cheen liya!'`;
+      break;
+     default:
+        return "..."; 
+  }
+  return dialuge;
+ }
 }
+
+// const actionWriter = createDialogueWriter("action");
+// console.log(actionWriter("Hero", "Villain"));
+// console.log(actionWriter("", "Villain")); 
+// console.log(createDialogueWriter("horror"));
+
 
 export function createTicketPricer(basePrice) {
   // Your code here
-}
 
+if(Number.isNaN(basePrice) || !Number.isFinite(basePrice) || basePrice <=0 ) return null;
+
+ return (seatType, isWeekend = false) => 
+  { 
+    const multiplier ={silver: 1, gold: 1.5, platinum:2};
+
+    if(!Object.hasOwn(multiplier, seatType) || typeof seatType !="string") return null;
+
+    let price = basePrice * multiplier[seatType];
+
+    if (isWeekend) price *= 1.3;
+
+    return Math.ceil(price);
+  }
+
+}
+//  Factory: returns a function (scores) => weighted average
+//  *      - weights: { story: 0.3, acting: 0.3, direction: 0.2, music: 0.2 }
+//  *      - scores: { story: 8, acting: 9, direction: 7, music: 8 }
+//  *      - Weighted avg = sum of (score * weight) for matching keys
+//  *      - Round to 1 decimal place
+//  *      - Agar weights not an object => return null
 export function createRatingCalculator(weights) {
   // Your code here
+
+if(typeof weights != "object" || weights === null) return null;
+// const weights= { story: 0.3, acting: 0.3, direction: 0.2, music: 0.2 }
+
+return (scores) => 
+{
+if(typeof scores != "object" || !scores ) return null;
+
+const keys = ["story", "acting", "direction", "music"];
+
+    let weightedAvg = 0;
+
+    for (const k of keys) {
+      const wt = weights[k];
+      const sc = scores[k];
+
+      if (typeof wt !== "number" || !Number.isFinite(wt)) return null;
+      if (typeof sc !== "number" || !Number.isFinite(sc)) return null;
+
+      weightedAvg += sc * wt;
+    }
+ 
+  return Math.round(weightedAvg * 10) / 10;
+}
+
 }
