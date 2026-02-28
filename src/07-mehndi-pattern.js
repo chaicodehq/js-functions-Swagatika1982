@@ -52,22 +52,110 @@
  *   isPalindrome("madam")     // => true
  *   generatePattern(3)        // => ["*", "**", "***", "**", "*"]
  */
+
+ 
 export function repeatChar(char, n) {
   // Your code here
-}
 
+  if( typeof char !== "string" || char.length ===0) return "";
+    
+ if(n <= 0 ) return "";       // base case
+
+ return char + repeatChar(char, n - 1); // recursive step
+ 
+}
+ 
+ 
 export function sumNestedArray(arr) {
   // Your code here
+
+   if(!Array.isArray(arr) ) return 0;
+    
+ if(arr.length === 0  ) return 0;
+
+  let sum = 0;
+
+  for (const item of arr) {
+    if (typeof item === "number" && Number.isFinite(item)) {
+      sum += item;                         
+    } else if (Array.isArray(item)) {
+      sum += sumNestedArray(item);         
+    }
+    
+  }
+    return sum;
 }
 
 export function flattenArray(arr) {
-  // Your code here
+ 
+
+if(!Array.isArray(arr) ) return  [];
+
+let flatArr = [];
+
+for (const item of arr) {   
+              
+     if (Array.isArray(item)) {
+       flatArr.push(...flattenArray(item));        
+    }
+    else{
+        flatArr.push(item);  
+    }
+}
+   return flatArr;
 }
 
 export function isPalindrome(str) {
   // Your code here
+
+   if (typeof str !== "string") return false;
+  const s = str.toLowerCase();
+
+  function check(left, right) {
+    
+    if (left >= right) return true;
+
+    if (s[left] !== s[right]) return false;
+
+    return check(left + 1, right - 1);  
+  }
+
+  return check(0, s.length - 1);
+
 }
+
+//  *   5. generatePattern(n)
+//  *      - Generate symmetric mehndi border pattern
+//  *      - n = 1 => ["*"]
+//  *      - n = 2 => ["*", "**", "*"]
+//  *      - n = 3 => ["*", "**", "***", "**", "*"]
+//  *      - Pattern goes from 1 star up to n stars, then back down to 1
+//  *      - Use recursion to build the ascending part, then mirror it
+//  *      - Agar n <= 0, return []
+//  *      - Agar n is not a positive integer, return []
+//  *
 
 export function generatePattern(n) {
   // Your code here
+
+  if(n <= 0 || !Number.isInteger(n)) return [];
+
+  const res = [];
+
+  function build(i) {
+    res.push("*".repeat(i));     
+
+    if (i === n) {               
+      for (let j = n - 1; j >= 1; j--) {
+        res.push("*".repeat(j));
+      }
+      return;
+    }
+
+    build(i + 1);              
+  }
+
+  build(1);
+  return res;
+
 }
