@@ -47,16 +47,67 @@
  */
 export function processGuests(guests, filterFn) {
   // Your code here
+  if(!Array.isArray(guests) || typeof filterFn !== "function") {return [];}
+
+  const CBresult = [];
+
+  for (const guest of guests) {     
+    if (filterFn(guest) === true) {
+      CBresult.push(guest);
+    }
+  }
+  return CBresult;  
 }
 
 export function notifyGuests(guests, notifyCallback) {
   // Your code here
-}
+ 
+
+ if(!Array.isArray(guests) || typeof notifyCallback !== "function") {return [];}
+const CBresult = [];
+ for(let guest of guests){
+  CBresult.push(notifyCallback(guest));
+  
+ }
+ return CBresult; 
+ }
 
 export function handleRSVP(guest, onAccept, onDecline) {
   // Your code here
-}
 
+  if(!guest || guest === null || typeof onAccept !== "function" || typeof onDecline !== "function") {return null;}
+
+  if(guest.rsvp === "yes"){
+    return (onAccept(guest));
+  }
+  else if(guest.rsvp === "no"){
+     return (onDecline(guest));
+  }
+  else{
+    return null;
+  }
+}
+ 
+//  *   4. transformGuestList(guests, ...transformFns)
+//  *      - Takes guest array and any number of transform functions
+//  *      - Each transformFn takes an array and returns a new array
+//  *      - Apply transforms LEFT to RIGHT (first fn first)
+//  *      - Return the final transformed array
+//  *      - Agar guests not array, return []
 export function transformGuestList(guests, ...transformFns) {
   // Your code here
+
+  if(!Array.isArray(guests)) {return [];}
+
+ let CBresult = guests;
+
+  for (const fn of transformFns) {
+    if (typeof fn === "function") {
+       
+      CBresult = fn(CBresult);
+    }
+  }
+
+  return CBresult;
+
 }
