@@ -46,16 +46,79 @@
  */
 export function createFilter(field, operator, value) {
   // Your code here
+
+  const oprtors = {
+    ">":  (a, b) => a > b,
+    "<":  (a, b) => a < b,
+    ">=": (a, b) => a >= b,
+    "<=": (a, b) => a <= b,
+    "===":(a, b) => a === b,
+  };
+
+ 
+  if (!oprtors[operator]) return () => false;
+
+   
+  return (dhaba) => oprtors[operator](dhaba[field], value);
 }
 
 export function createSorter(field, order = "asc") {
   // Your code here
+    const srt = order === "desc" ? -1 : 1;
+
+
+  return function (a, b) {
+    const x = a[field];
+    const y = b[field];
+
+     
+    if (x == null && y == null) return 0;
+    if (x == null) return 1 * srt;    
+    if (y == null) return -1 * srt;
+
+    
+    if (typeof x === "number" && typeof y === "number") {
+      return (x - y) * srt;
+    }
+
+  
+    if (typeof x === "string" && typeof y === "string") {
+      return x.localeCompare(y) * srt;
+    }
+ return String(x).localeCompare(String(y)) * srt;
+  };
+
+
 }
 
 export function createMapper(fields) {
   // Your code here
+
+  return function (obj) {
+    const result = {};
+
+    for (const field of fields) {
+      if (field in obj) {
+        result[field] = obj[field];
+      }
+    }
+
+    return result;
+  };
 }
 
 export function applyOperations(data, ...operations) {
   // Your code here
+
+   if (!Array.isArray(data)) return [];
+
+  let result = data;
+
+  for (const opr of operations) {
+    if (typeof opr === "function") {
+      result = opr(result);
+    }
+  }
+
+  return result;
 }
